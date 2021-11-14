@@ -14,7 +14,7 @@
         while($row=$result->fetch_assoc()){
             $arr=array("username"=>trim($row['username']),
             "password"=>trim($row['password']),
-            "fk_email"=>trim($row['fk_email']));  
+            "email"=>trim($row['email']));  
           array_push($arr1,$arr); 
         }
     }else{

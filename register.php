@@ -11,11 +11,9 @@ if(isset($_POST['create_btn']))
 
     if($psw == $confirm)
     {
-        $sql="insert into tabel_user(username,password,fk_email) values('$username','$pass_encript','$email')";
-        // echo "<meta http-equiv='refresh' content='0'>";
-        $sql2="insert into tabel_email(email) values('$email')";
-        // echo "<meta http-equiv='refresh' content='0'>";
-        if($con->query($sql2) ==TRUE && $con->query($sql)==TRUE)
+        $sql="insert into tabel_user(username,password,email) values('$username','$pass_encript','$email')";
+        echo "<meta http-equiv='refresh' content='0'>";
+        if($con->query($sql)==TRUE)
         {
             $message = "Berhasil Registrasi";
                  echo "<script type='text/javascript'>alert('$message');</script>";

@@ -51,7 +51,7 @@ if (isset($_POST['simpan_btn'])) {
     $conDate = date("Y-m-d", strtotime($tanggal_masuk));
     $kodeLama = $_POST["kodeLama"];
     $kodeBaru = $_POST["kodeBaru"];
-    // echo "<script type='text/javascript'>alert('$kodeLama');</script>";
+    // echo "<script type='text/javascript'>alert('$nama');</script>";
     $arrCariKode = [];
     $sql = "SELECT Kode FROM tabel_stok_barang WHERE Username = '" . $user . "' and Kode = '$kodeLama'";
     $resultCariKode = $con->query($sql);
@@ -86,11 +86,10 @@ if (isset($_POST['simpan_btn'])) {
             $JumlahBaru = $arrJumlahLama[0]['Jumlah'] + $jumlah;
             // echo "<script type='text/javascript'>alert('$JumlahBaru');</script>";
             $sqlUpdate = "update tabel_stok_barang set 
-            Jumlah= $JumlahBaru
-            where Username = '$user' and Kode='$kodeLama'";
-            $sqlInsertTanggal = "insert into table_barang_masuk(Kode, Tanggal_masuk, Nama_barang, Jumlah, Username) values('$kodeLama', '$conDate' , '$nama', $jumlah, '$user')";
+            Jumlah= $JumlahBaru where Username = '$user' and Kode='$kodeLama'";
+            $sqlInsertTanggal = "insert into tabel_barang_masuk(Kode, Tanggal_masuk, Nama_barang, Jumlah, Username) values('$kodeLama', '$conDate', '$nama', $jumlah, '$user')";
             echo "<meta http-equiv='refresh' content='0'>";
-            if ($con->query($sqlUpdate) == TRUE && $con->query($sqlInsertTanggal) == TRUE) {
+            if (($con->query($sqlUpdate) == TRUE) && ($con->query($sqlInsertTanggal) == TRUE)) {
                 $info = "data sukses update";
                 echo "<script type='text/javascript'>alert('$info');</script>";
             } else {
@@ -99,16 +98,17 @@ if (isset($_POST['simpan_btn'])) {
                 echo "<script type='text/javascript'>alert('$message');</script>";
             }
         }else {
-            // $sql2 = "insert into tabel_stok_barang(Kode, Nama_Barang, Jumlah, Username) values('$kodeLama', '$nama', $jumlah, '$user')";
-            // // echo "<meta http-equiv='refresh' content='0'>";
-            // if ($con->query($sql2) == TRUE) {
-            //     $info = "data sukses disimpan";
-            //     echo "<script type='text/javascript'>alert('$info');</script>";
-            // } else {
-            //     $info = "error simpan data " . $con->error;
-            //     $message = "Data gagal disimpan";
-            //     echo "<script type='text/javascript'>alert('$message');</script>";
-            // }
+            $sqlInsert = "insert into tabel_stok_barang(Kode, Nama_Barang, Jumlah, Username) values('$kodeBaru', '$nama', $jumlah, '$user')";
+            $sqlInsertTanggal = "insert into tabel_barang_masuk(Kode, Tanggal_masuk, Nama_barang, Jumlah, Username) values('$kodeBaru', '$conDate', '$nama', $jumlah, '$user')";
+            echo "<meta http-equiv='refresh' content='0'>";
+            if (($con->query($sqlInsert) == TRUE) && ($con->query($sqlInsertTanggal) == TRUE)) {
+                $info = "data sukses disimpan";
+                echo "<script type='text/javascript'>alert('$info');</script>";
+            } else {
+                $info = "error simpan data " . $con->error;
+                $message = "Data gagal disimpan";
+                echo "<script type='text/javascript'>alert('$message');</script>";
+            }
         }
 }
 
@@ -257,7 +257,7 @@ if (isset($_POST['simpan_btn'])) {
                             <div class="form-group">
                                 <label style="color: black;">Kode Barang</label>
                                 <select name="kodeLama" id="SelectKode" class="form-control" onchange="showData(this.value)" data-live-search="true" title="Pilih Kode Barang">
-                                    <option value="">-- Pilih Kode Barang --</option>
+                                    <option value="0">-- Pilih Kode Barang --</option>
                                     <?php
                                     for ($i = 0; $i < $jum2; $i++) {
                                         print "<option value ='" . $arrKode[$i]['Kode'] . "'>" . $arrKode[$i]['Kode'] . "</option>";
