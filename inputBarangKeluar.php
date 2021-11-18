@@ -26,14 +26,14 @@ if ($result->num_rows > 0) {
 $jum2 = count($arrKode);
 
 $arr1 = [];
-$sql = "SELECT Kode, Tanggal_masuk, Nama_Barang, Jumlah FROM tabel_barang_masuk WHERE Username = '" . $user . "'";
+$sql = "SELECT Kode, Tanggal_keluar, Nama_Barang, Jumlah FROM tabel_barang_keluar WHERE Username = '" . $user . "'";
 $result = $con->query($sql);
 if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
         $arr = array(
             "Kode" => trim($row['Kode']),
             "Nama_Barang" => trim($row['Nama_Barang']),
-            "Tanggal_masuk" => trim($row['Tanggal_masuk']),
+            "Tanggal_keluar" => trim($row['Tanggal_keluar']),
             "Jumlah" => trim($row['Jumlah']),
             "Username" => trim($user)
         );
@@ -47,8 +47,8 @@ $jum = count($arr1);
 if (isset($_POST['simpan_btn'])) {
     $nama = $_POST["nama"];
     $jumlah = $_POST["jumlah"];
-    $tanggal_masuk = $_POST["tgl_masuk"];
-    $conDate = date("Y-m-d", strtotime($tanggal_masuk));
+    $tanggal_keluar = $_POST["tgl_masuk"];
+    $conDate = date("Y-m-d", strtotime($tanggal_keluar));
     $kodeLama = $_POST["kodeLama"];
     $kodeBaru = $_POST["kodeBaru"];
     // echo "<script type='text/javascript'>alert('$nama');</script>";
@@ -83,11 +83,11 @@ if (isset($_POST['simpan_btn'])) {
             }
             $jumLama = count($arrJumlahLama);
             // echo "<script type='text/javascript'>alert('$jumLama');</script>";
-            $JumlahBaru = $arrJumlahLama[0]['Jumlah'] + $jumlah;
+            $JumlahBaru = $arrJumlahLama[0]['Jumlah'] - $jumlah;
             // echo "<script type='text/javascript'>alert('$JumlahBaru');</script>";
             $sqlUpdate = "update tabel_stok_barang set 
             Jumlah= $JumlahBaru where Username = '$user' and Kode='$kodeLama'";
-            $sqlInsertTanggal = "insert into tabel_barang_masuk(Kode, Tanggal_masuk, Nama_barang, Jumlah, Username) values('$kodeLama', '$conDate', '$nama', $jumlah, '$user')";
+            $sqlInsertTanggal = "insert into tabel_barang_keluar(Kode, Tanggal_keluar, Nama_barang, Jumlah, Username) values('$kodeLama', '$conDate', '$nama', $jumlah, '$user')";
             echo "<meta http-equiv='refresh' content='0'>";
             if (($con->query($sqlUpdate) == TRUE) && ($con->query($sqlInsertTanggal) == TRUE)) {
                 $info = "data sukses update";
@@ -98,17 +98,8 @@ if (isset($_POST['simpan_btn'])) {
                 echo "<script type='text/javascript'>alert('$message');</script>";
             }
         }else {
-            $sqlInsert = "insert into tabel_stok_barang(Kode, Nama_Barang, Jumlah, Username) values('$kodeBaru', '$nama', $jumlah, '$user')";
-            $sqlInsertTanggal = "insert into tabel_barang_masuk(Kode, Tanggal_masuk, Nama_barang, Jumlah, Username) values('$kodeBaru', '$conDate', '$nama', $jumlah, '$user')";
-            echo "<meta http-equiv='refresh' content='0'>";
-            if (($con->query($sqlInsert) == TRUE) && ($con->query($sqlInsertTanggal) == TRUE)) {
-                $info = "data sukses disimpan";
+                $info = "data gagal disimpan";
                 echo "<script type='text/javascript'>alert('$info');</script>";
-            } else {
-                $info = "error simpan data " . $con->error;
-                $message = "Data gagal disimpan";
-                echo "<script type='text/javascript'>alert('$message');</script>";
-            }
         }
 }
 
@@ -219,9 +210,9 @@ if (isset($_POST['simpan_btn'])) {
             <main>
                 <div class="container-fluid px-4">
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="mt-4">Barang Masuk</h1>
+                        <h1 class="mt-4">Barang Keluar</h1>
                     </div>
-                    <form class="form-horizontal" method="POST" action="inputBarangMasuk.php?username=<?php print $user ?>">
+                    <form class="form-horizontal" method="POST" action="inputBarangKeluar.php?username=<?php print $user ?>">
                         <div class="modal-body">
                             <div class="form-group">
                                 <label style="color: black;">Kode Barang</label>
@@ -233,10 +224,6 @@ if (isset($_POST['simpan_btn'])) {
                                     }
                                     ?>
                                 </select>
-                            </div>
-                            <div class="form-group" id="KodeBarangBaru">
-                                <label style="color:black">Kode Barang</label>
-                                <input name="kodeBaru" value="" type="text" class="form-control input-sm" id="nama" placeholder="Kode Barang...">
                             </div>
                             <div class="form-group">
                                 <label style="color:black">Tanggal Masuk</label>
@@ -286,7 +273,7 @@ if (isset($_POST['simpan_btn'])) {
                     document.getElementById("txtHint").innerHTML = this.responseText;
                 }
             }
-            xmlhttp.open("GET", "getdata.php?kode=" + str, true);
+            xmlhttp.open("GET", "getdataMasuk.php?kode=" + str, true);
             xmlhttp.send();
         }
     </script>

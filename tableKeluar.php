@@ -28,7 +28,7 @@ else
 $jum2 = count($arrKode);
 
 $arr1 = [];
-$sql = "SELECT Kode, Tanggal_masuk, Nama_Barang, Jumlah FROM tabel_barang_masuk WHERE Username = '".$user."'";
+$sql = "SELECT Kode, Tanggal_keluar, Nama_Barang, Jumlah FROM tabel_barang_keluar WHERE Username = '".$user."'";
 $result = $con->query($sql);
 if($result->num_rows > 0)
 {
@@ -36,7 +36,7 @@ if($result->num_rows > 0)
     {
       $arr=array("Kode"=>trim($row['Kode']),
       "Nama_Barang"=>trim($row['Nama_Barang']),
-      "Tanggal_masuk"=>trim($row['Tanggal_masuk']),
+      "Tanggal_keluar"=>trim($row['Tanggal_keluar']),
       "Jumlah"=>trim($row['Jumlah']),
       "Username"=>trim($user));
       array_push($arr1,$arr); 
@@ -183,15 +183,15 @@ $jum = count($arr1);
                 <main>
                     <div class="container-fluid px-4">
                         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="mt-4">Barang Masuk</h1>
+                        <h1 class="mt-4">Barang Keluar</h1>
                         <div class="nav justify-content-end">
                             <?php
-                                print "<a href='inputBarangMasuk.php?username=".$user."' class='btn btn-sm btn-success' >";
+                                print "<a href='inputBarangKeluar.php?username=".$user."' class='btn btn-sm btn-success' >";
                             ?>         
                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16">
                                     <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
                                     <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-                                </svg> Barang Masuk
+                                </svg> Barang Keluar
                             </a>
                         </div>
 
@@ -204,7 +204,7 @@ $jum = count($arr1);
                                     <thead>
                                         <tr>
                                             <th>Kode Barang</th>
-                                            <th>Tanggal Masuk</th>
+                                            <th>Tanggal Keluar</th>
                                             <th>Nama Barang</th>
                                             <th>Jumlah</th>
                                             <th>Aksi</th>
@@ -213,7 +213,7 @@ $jum = count($arr1);
                                     <tfoot>
                                         <tr>
                                             <th>Kode Barang</th>
-                                            <th>Tanggal Masuk</th>
+                                            <th>Tanggal Keluar</th>
                                             <th>Nama Barang</th>
                                             <th>Jumlah</th>
                                             <th>Aksi</th>
@@ -224,7 +224,7 @@ $jum = count($arr1);
                                         for($i=0;$i<$jum;$i++){
                                             print "<tr>
                                                 <td>".$arr1[$i]['Kode']."</td>
-                                                <td>".$arr1[$i]['Tanggal_masuk']."</td>
+                                                <td>".$arr1[$i]['Tanggal_keluar']."</td>
                                                 <td>".$arr1[$i]['Nama_Barang']."</td>
                                                 <td>".$arr1[$i]['Jumlah']."</td>
                                                 <td>

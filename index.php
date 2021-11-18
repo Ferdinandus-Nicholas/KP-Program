@@ -69,6 +69,14 @@ if ($user == null){
                                     <div class='sb-nav-link-icon'><i class='fas fa-table'></i></div>
                                     Barang Masuk
                                 </a>
+                                <a class='nav-link' href='tableKeluar.php?username=".$user."'>
+                                    <div class='sb-nav-link-icon'><i class='fas fa-table'></i></div>
+                                    Barang Keluar
+                                </a>
+                                <a class='nav-link' href='tableRetur.php?username=".$user."'>
+                                    <div class='sb-nav-link-icon'><i class='fas fa-table'></i></div>
+                                    Barang Retur
+                                </a>
                             </div>";
                         ?>
                         
