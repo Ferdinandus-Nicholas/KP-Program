@@ -47,7 +47,7 @@ $jum = count($arr1);
 if (isset($_POST['simpan_btn'])) {
     $nama = $_POST["nama"];
     $jumlah = $_POST["jumlah"];
-    $tanggal_keluar = $_POST["tgl_masuk"];
+    $tanggal_keluar = $_POST["tgl_keluar"];
     $conDate = date("Y-m-d", strtotime($tanggal_keluar));
     $kodeLama = $_POST["kodeLama"];
     $kodeBaru = $_POST["kodeBaru"];
@@ -90,11 +90,11 @@ if (isset($_POST['simpan_btn'])) {
             $sqlInsertTanggal = "insert into tabel_barang_keluar(Kode, Tanggal_keluar, Nama_barang, Jumlah, Username) values('$kodeLama', '$conDate', '$nama', $jumlah, '$user')";
             echo "<meta http-equiv='refresh' content='0'>";
             if (($con->query($sqlUpdate) == TRUE) && ($con->query($sqlInsertTanggal) == TRUE)) {
-                $info = "data sukses update";
+                $info = "data sukses disimpan";
                 echo "<script type='text/javascript'>alert('$info');</script>";
             } else {
                 $info = "error simpan data " . $con->error;
-                $message = "Data gagal diupdate";
+                $message = "Data gagal disimpan";
                 echo "<script type='text/javascript'>alert('$message');</script>";
             }
         }else {
@@ -226,8 +226,8 @@ if (isset($_POST['simpan_btn'])) {
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label style="color:black">Tanggal Masuk</label>
-                                <input name="tgl_masuk" value="" type="date" class="form-control input-sm" id="nama">
+                                <label style="color:black">Tanggal keluar</label>
+                                <input name="tgl_keluar" value="" type="date" class="form-control input-sm" id="nama">
                             </div>
                             <div class="form-group" id="NamaBarangBaru">
                                 <label style="color:black">Nama Barang</label>
