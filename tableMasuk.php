@@ -28,13 +28,14 @@ else
 $jum2 = count($arrKode);
 
 $arr1 = [];
-$sql = "SELECT Kode, Tanggal_masuk, Nama_Barang, Jumlah FROM tabel_barang_masuk WHERE Username = '".$user."'";
+$sql = "SELECT id, Kode, Tanggal_masuk, Nama_Barang, Jumlah FROM tabel_barang_masuk WHERE Username = '".$user."'";
 $result = $con->query($sql);
 if($result->num_rows > 0)
 {
   while($row=$result->fetch_assoc())
     {
-      $arr=array("Kode"=>trim($row['Kode']),
+      $arr=array("id"=>trim($row['id']),
+      "Kode"=>trim($row['Kode']),
       "Nama_Barang"=>trim($row['Nama_Barang']),
       "Tanggal_masuk"=>trim($row['Tanggal_masuk']),
       "Jumlah"=>trim($row['Jumlah']),
@@ -48,55 +49,73 @@ else
 }
 $jum = count($arr1);
 
-// if($jum > 0)
-//     {
-//         for($i=0;$i<$jum;$i++)
-//         {
-//             //Edit Barang
-//             if(isset($_POST['update_btn'.$i]))
-//             {
-//                 $nama=$_POST["nabar"];
-//                 $jumlah=$_POST["jumlah"];
-//                 $kode=$_POST["kode"];
+if($jum > 0)
+    {
+        for($i=0;$i<$jum;$i++)
+        {
+            //Edit Barang
+            // if(isset($_POST['update_btn'.$i]))
+            // {
+            //     $nama=$_POST["nabar"];
+            //     $jumlah=$_POST["jumlah"];
+            //     $kode=$_POST["kode"];
 
-//                 $sql="update tabel_stok_barang set 
-//                 Kode='$kode',
-//                 Nama_barang='$nama',
-//                 Jumlah = '$jumlah' where Username = '$user' and Kode='$kode'";
-//                 echo "<meta http-equiv='refresh' content='0'>";
-//                 if($con->query($sql)==TRUE)
-//                 {
-//                     $info= "data sukses update";
-//                     echo "<script type='text/javascript'>alert('$info');</script>";
-//                 }
-//                 else
-//                 {
-//                     $info= "error simpan data ".$con->error;
-//                     $message = "Data gagal diupdate";
-//                     echo "<script type='text/javascript'>alert('$message');</script>";
-//                 }
-//             }
+            //     $sql="update tabel_barang_masuk set
+            //     Nama_barang='$nama',
+            //     Jumlah = '$jumlah' where Username = '$user' and Kode='$kode'";
+            //     echo "<meta http-equiv='refresh' content='0'>";
+            //     if($con->query($sql)==TRUE)
+            //     {
+            //         $info= "data sukses update";
+            //         echo "<script type='text/javascript'>alert('$info');</script>";
+            //     }
+            //     else
+            //     {
+            //         $info= "error simpan data ".$con->error;
+            //         $message = "Data gagal diupdate";
+            //         echo "<script type='text/javascript'>alert('$message');</script>";
+            //     }
+            // }
 
-//             //Hapus Barang
-//             if(isset($_POST['hapus_btn'.$i]))
-//             {
-//                 $kode=trim($_POST['hapus_data'.$i]);
-//                 $sql="delete from tabel_stok_barang where Kode='".$kode."' and Username = '$user'";
-//                 echo "<meta http-equiv='refresh' content='0'>";
-//                 if($con->query($sql)==TRUE)
-//                 {
-//                     $info= "data sukses dihapus";
-//                     echo "<script type='text/javascript'>alert('$info');</script>";
-//                 }
-//                 else
-//                 {
-//                     $info= $con->error;
-//                     $message = "Data gagal dihapus";
-//                     echo "<script type='text/javascript'>alert('$message');</script>";
-//                 }
-//             }
-//         }
-//     }
+            //Hapus Barang
+            if(isset($_POST['hapus_btn'.$i]))
+            {
+                $kode=trim($_POST['hapus_data'.$i]);
+                $jumlah=$_POST["jumlah"];
+                $id=$_POST["id"];
+                $arrJumlahLama = [];
+                $sqlJumlahLama = "SELECT Jumlah From tabel_stok_barang WHERE Username = '".$user."' and Kode = '$kode'";
+                $resultCariJumlahLama = $con->query($sqlJumlahLama);
+                if ($resultCariJumlahLama->num_rows > 0) {
+                    while ($row = $resultCariJumlahLama->fetch_assoc()) {
+                        $arr = array(
+                            "Jumlah" => trim($row['Jumlah'])
+                        );
+                        array_push($arrJumlahLama, $arr);
+                    }
+                } else {
+                    $info = "";
+                }
+                $jumLama = count($arrJumlahLama);
+                $JumlahBaru = $arrJumlahLama[0]['Jumlah'] - $jumlah;
+                $sqlUpdate = "update tabel_stok_barang set 
+                Jumlah= $JumlahBaru where Username = '$user' and Kode='$kode'";
+                $sql="delete from tabel_barang_masuk where Kode='".$kode."' and Username = '$user' and id = '$id'";
+                echo "<meta http-equiv='refresh' content='0'>";
+                if($con->query($sql)==TRUE && $con->query($sqlUpdate)==TRUE)
+                {
+                    $info= "data sukses dihapus";
+                    echo "<script type='text/javascript'>alert('$info');</script>";
+                }
+                else
+                {
+                    $info= $con->error;
+                    $message = "Data gagal dihapus";
+                    echo "<script type='text/javascript'>alert('$message');</script>";
+                }
+            }
+        }
+    }
 ?>
 
 <!DOCTYPE html>
@@ -115,7 +134,7 @@ $jum = count($arr1);
     <body class="sb-nav-fixed">
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
-            <a class="navbar-brand ps-3" href="index.html">Component Warehouse</a>
+            <a class="navbar-brand ps-3">Component Warehouse</a>
             <!-- Sidebar Toggle-->
             <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
             <!-- Navbar Search -->
@@ -130,8 +149,7 @@ $jum = count($arr1);
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="#!">Settings</a></li>
-                        <li><a class="dropdown-item" href="#!">Activity Log</a></li>
+                        <li><a class="dropdown-item" href="#!">Laporan</a></li>
                         <li><hr class="dropdown-divider" /></li>
                         <li><a class="dropdown-item" href="login.php">Logout</a></li>
                     </ul>
@@ -227,13 +245,7 @@ $jum = count($arr1);
                                                 <td>".$arr1[$i]['Tanggal_masuk']."</td>
                                                 <td>".$arr1[$i]['Nama_Barang']."</td>
                                                 <td>".$arr1[$i]['Jumlah']."</td>
-                                                <td>
-                                                    <a href='#' style='font-size: 10px;' class='btn btn-warning btn-xs' data-bs-toggle='modal' data-bs-target='#modalEdit".$i."'>
-                                                        <svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='currentColo 0 0 0 1.5-1.5vr' class='bi bi-pencil-square' viewBox='0 0 16 16'>
-                                                            <path d='M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z'/>
-                                                            <path fill-rule='evenodd' d='M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z'/>
-                                                        </svg> EDIT
-                                                    </a>        
+                                                <td>       
                                                     <a href='#' style='font-size: 10px;' class='btn btn-danger btn-xs' data-bs-toggle='modal'data-bs-target='#modalHapus".$i."'>
                                                     <svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='currentColor' class='bi bi-trash-fill' viewBox='0 0 16 16'>
                                                         <path d='M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z'/>
@@ -273,12 +285,12 @@ $jum = count($arr1);
                         <div class='modal-body'>
                             <div class='form-group'>
                                 <label style='color:black;text-align:right'>Kode Barang</label>
-                                <input name='kode' type='text' class='form-control' value='".$arr1[$i]['Kode']."' placeholder='".$arr1[$i]['Kode']."' style='width:465px;' required>
+                                <input name='kode' type='text' class='form-control' value='".$arr1[$i]['Kode']."' placeholder='".$arr1[$i]['Kode']."' style='width:465px;' required readonly>
                             </div>
 
                             <div class='form-group'>
                                 <label style='color:black;text-align:right'>Nama Barang</label>
-                                <input name='nabar' type='text' class='form-control' value='".$arr1[$i]['Nama_Barang']."' placeholder='".$arr1[$i]['Nama_Barang']."' style='width:465px;' required>
+                                <input name='nabar' type='text' class='form-control' value='".$arr1[$i]['Nama_Barang']."' placeholder='".$arr1[$i]['Nama_Barang']."' style='width:465px;' required readonly>
                             </div>
 
                             <div class='form-group'>
@@ -306,12 +318,14 @@ $jum = count($arr1);
                         <h5 class='modal-title' id='modalHapusLabel'>Hapus Barang</h5>
                         <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
                     </div>
-                    <form class='form-horizontal' method='post'action='tables.php?username=".$user."'>
+                    <form class='form-horizontal' method='post'action='tableMasuk.php?username=".$user."'>
                         <div class='modal-body'>
                             <div class='form-group'>
                                 <label style='color:black;text-align:right'>Yakin ingin menghapus barang ini ?</label>
                             </div>
                             <input type='hidden' name='hapus_data".$i."' value='".$arr1[$i]['Kode']."'>
+                            <input type='hidden' name='id' value='".$arr1[$i]['id']."'>
+                            <input name='jumlah' class='form-control' type='hidden' value='".$arr1[$i]['Jumlah']."' placeholder='Jumlah Barang...' style='width:465px;'>
                         </div>
                         <div class='modal-footer'>
                             <input type='submit' class='btn btn-danger' value='Hapus' name='hapus_btn".$i."'>
