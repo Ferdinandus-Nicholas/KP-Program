@@ -104,8 +104,9 @@ if (isset($_POST['simpan_btn'])) {
             $sqlUpdateKeluar = "update tabel_barang_keluar set 
             Jumlah= $jumlahBaruKeluar where Username = '$user' and Kode='$kodeLama'";
             $sqlInsertTanggal = "insert into tabel_barang_retur(Kode, Tanggal_retur, Nama_barang, Jumlah, Username) values('$kodeLama', '$conDate', '$nama', $jumlah, '$user')";
+            $sqlLaporan = "insert into tabel_laporan(Kode, Nama_barang, Jumlah, Username, Tanggal, Status) values('$kodeLama','$nama', $jumlah, '$user', '$conDate', 'Retur')";
             echo "<meta http-equiv='refresh' content='0'>";
-            if (($con->query($sqlUpdate) == TRUE) && ($con->query($sqlInsertTanggal) == TRUE) && ($con->query($sqlUpdateKeluar) == TRUE)) {
+            if (($con->query($sqlUpdate) == TRUE) && ($con->query($sqlInsertTanggal) == TRUE) && ($con->query($sqlUpdateKeluar) == TRUE) && ($con->query($sqlLaporan) == TRUE)) {
                 $info = "data sukses disimpan";
                 echo "<script type='text/javascript'>alert('$info');</script>";
             } else {

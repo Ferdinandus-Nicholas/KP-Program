@@ -88,8 +88,10 @@ if (isset($_POST['simpan_btn'])) {
             $sqlUpdate = "update tabel_stok_barang set 
             Jumlah= $JumlahBaru where Username = '$user' and Kode='$kodeLama'";
             $sqlInsertTanggal = "insert into tabel_barang_masuk(Kode, Tanggal_masuk, Nama_barang, Jumlah, Username) values('$kodeLama', '$conDate', '$nama', $jumlah, '$user')";
+            $sqlLaporan = "insert into tabel_laporan(Kode, Nama_barang, Jumlah, Username, Tanggal, Status) values('$kodeLama','$nama', $jumlah, '$user', '$conDate', 'Masuk')";
             echo "<meta http-equiv='refresh' content='0'>";
-            if (($con->query($sqlUpdate) == TRUE) && ($con->query($sqlInsertTanggal) == TRUE)) {
+
+            if (($con->query($sqlUpdate) == TRUE) && ($con->query($sqlInsertTanggal) == TRUE) && ($con->query($sqlLaporan) == TRUE)) {
                 $info = "data sukses disimpan";
                 echo "<script type='text/javascript'>alert('$info');</script>";
             } else {
@@ -100,8 +102,9 @@ if (isset($_POST['simpan_btn'])) {
         }else {
             $sqlInsert = "insert into tabel_stok_barang(Kode, Nama_Barang, Jumlah, Username) values('$kodeBaru', '$nama', $jumlah, '$user')";
             $sqlInsertTanggal = "insert into tabel_barang_masuk(Kode, Tanggal_masuk, Nama_barang, Jumlah, Username) values('$kodeBaru', '$conDate', '$nama', $jumlah, '$user')";
+            $sqlLaporan = "insert into tabel_laporan(Kode, Nama_barang, Jumlah, Username, Tanggal, Status) values('$kodeBaru','$nama', $jumlah, '$user', '$conDate', 'Masuk')";
             echo "<meta http-equiv='refresh' content='0'>";
-            if (($con->query($sqlInsert) == TRUE) && ($con->query($sqlInsertTanggal) == TRUE)) {
+            if (($con->query($sqlInsert) == TRUE) && ($con->query($sqlInsertTanggal) == TRUE) && ($con->query($sqlLaporan) == TRUE)) {
                 $info = "data sukses disimpan";
                 echo "<script type='text/javascript'>alert('$info');</script>";
             } else {
